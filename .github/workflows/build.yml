@@ -1,0 +1,80 @@
+name: Repositório
+
+on:
+  push:
+    branches: [main]
+  # Pega os commits novos dos apps (pacotes -git)
+  schedule:
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: repositorio
+  cancel-in-progress: false
+
+env:
+  REPO_NAME: higorhgon
+  RELEASE_TAG: x86_64
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: archlinux:base-devel
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Instalar ferramentas
+        run: pacman -Syu --noconfirm --needed git github-cli
+
+      - uses: actions/checkout@v4
+
+      - name: Preparar usuário de build
+        run: |
+          useradd -m builder
+          echo 'builder ALL=(ALL) NOPASSWD: /usr/bin/pacman' >/etc/sudoers.d/builder
+          chown -R builder: "$GITHUB_WORKSPACE"
+
+      - name: Baixar o repositório publicado
+        run: |
+          if ! gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release create "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" \
+              --title "Repositório pacman (x86_64)" \
+              --notes "Pacotes do repositório [$REPO_NAME]. Veja o README para usar."
+          fi
+          mkdir -p repo
+          gh release download "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --dir repo \
+            --pattern '*.pkg.tar.zst' --pattern "$REPO_NAME.*" || true
+          chown -R builder: repo
+
+      - name: Compilar
+        run: sudo -u builder --preserve-env=REPO_NAME ./build.sh repo
+
+      - name: Publicar
+        run: |
+          cd repo
+          if [ ! -e .changed ]; then
+            echo "Nada mudou"
+            exit 0
+          fi
+          rm .changed
+          gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" \
+            --json assets --jq '.assets[].name' >../assets.txt
+          # Os pacotes novos primeiro, para o banco não apontar para o que
+          # ainda não subiu
+          for file in *.pkg.tar.zst; do
+            if ! grep -qxF "$file" ../assets.txt; then
+              gh release upload "$RELEASE_TAG" "$file" --repo "$GITHUB_REPOSITORY"
+            fi
+          done
+          gh release upload "$RELEASE_TAG" "$REPO_NAME".* --repo "$GITHUB_REPOSITORY" --clobber
+          # Apaga o que saiu do repositório
+          while read -r asset; do
+            if [ ! -e "$asset" ]; then
+              gh release delete-asset "$RELEASE_TAG" "$asset" --repo "$GITHUB_REPOSITORY" --yes
+            fi
+          done <../assets.txt
