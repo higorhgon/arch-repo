@@ -32,10 +32,15 @@ Os pacotes ainda não são assinados, por isso o `SigLevel = Optional TrustAll`.
 ## Como funciona
 
 - `packages.txt` lista os pacotes: o repositório de cada app e o caminho do
-  `PKGBUILD` nele. O `PKGBUILD` fica no repositório do app.
+  `PKGBUILD` nele. O `PKGBUILD` fica no repositório do app; `url#branch` lê de
+  outro branch que não o padrão.
 - O workflow roda a cada push aqui, todo dia às 06:00 (horário de Brasília)
   e quando disparado à mão em **Actions → Repositório → Run workflow**.
 - `build.sh` compila só os pacotes cuja versão ainda não está publicada, tira
-  as versões antigas e refaz o banco `higorhgon.db` com o `repo-add`.
+  as versões antigas e refaz o banco `higorhgon.db` com o `repo-add`. Um pacote
+  que não compila não segura os outros: a versão publicada dele fica, e o
+  workflow termina com erro apontando qual foi.
+- O `herdr-git` compila a última release estável do herdr com os commits do
+  fork por cima, então cada release nova chega no build diário seguinte.
 
 Para incluir um app, acrescente uma linha ao `packages.txt`.

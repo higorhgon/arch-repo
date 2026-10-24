@@ -78,3 +78,10 @@ jobs:
               gh release delete-asset "$RELEASE_TAG" "$asset" --repo "$GITHUB_REPOSITORY" --yes
             fi
           done <../assets.txt
+
+      - name: Conferir falhas
+        run: |
+          if [ -e repo/.failed ]; then
+            echo "::error::Pacotes que não compilaram: $(paste -sd ' ' repo/.failed)"
+            exit 1
+          fi
