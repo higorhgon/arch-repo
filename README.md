@@ -7,6 +7,7 @@ Actions e publicado na release [`x86_64`](../../releases/tag/x86_64).
 |---|---|
 | `omajim-git` | [Omajim](https://github.com/higorhgon/omajim), cliente XMPP baseado no Gajim |
 | `omapass-git` | [omapass](https://github.com/higorhgon/omapass), gerenciador de senhas |
+| `herdr-git` | [herdr](https://github.com/higorhgon/herdr), fork com dimming dos panes no estilo do Ghostty e tema do Omarchy; substitui o `herdr` do Omarchy |
 
 ## Uso
 
@@ -21,7 +22,7 @@ Server = https://github.com/higorhgon/arch-repo/releases/download/x86_64
 E instale como qualquer pacote:
 
 ```sh
-sudo pacman -Syu omajim-git omapass-git
+sudo pacman -Syu omajim-git omapass-git herdr-git
 ```
 
 As atualizações chegam pelo `pacman -Syu` de sempre.

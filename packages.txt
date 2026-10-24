@@ -1,3 +1,4 @@
 # Pacotes do repositório: nome, repositório git do app e caminho do PKGBUILD nele
 omajim-git   https://github.com/higorhgon/omajim.git   arch/PKGBUILD
 omapass-git  https://github.com/higorhgon/omapass.git  packaging/PKGBUILD
+herdr-git    https://github.com/higorhgon/herdr.git    packaging/arch/PKGBUILD
