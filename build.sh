@@ -21,8 +21,15 @@ build_package() {
 		branch=${url#*#}
 		url=${url%%#*}
 	fi
-	git clone --quiet --depth 1 ${branch:+--branch "$branch"} "$url" "$work_dir/$name" >&2
-	cd "$work_dir/$name/$(dirname "$path")"
+	if [[ $url == */PKGBUILD ]]; then
+		# Um PKGBUILD publicado pelo próprio app, como o da última release
+		mkdir -p "$work_dir/$name"
+		curl --fail --silent --show-error --location --output "$work_dir/$name/PKGBUILD" "$url" >&2
+		cd "$work_dir/$name"
+	else
+		git clone --quiet --depth 1 ${branch:+--branch "$branch"} "$url" "$work_dir/$name" >&2
+		cd "$work_dir/$name/$(dirname "$path")"
+	fi
 
 	# Baixa o código e calcula a versão (pkgver) sem compilar
 	makepkg --nobuild --nodeps --noconfirm >&2

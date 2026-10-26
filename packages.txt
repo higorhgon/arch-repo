@@ -1,5 +1,7 @@
 # Pacotes do repositório: nome, repositório git do app (url#branch para outro
-# branch que não o padrão) e caminho do PKGBUILD nele
+# branch que não o padrão) e caminho do PKGBUILD nele. Uma URL terminada em
+# /PKGBUILD baixa esse arquivo direto; o caminho então é só PKGBUILD.
 omajim-git   https://github.com/higorhgon/omajim.git   arch/PKGBUILD
 omapass-git  https://github.com/higorhgon/omapass.git  packaging/PKGBUILD
 herdr-git    https://github.com/higorhgon/herdr.git#omarchy    packaging/arch/PKGBUILD
+monitor-noticias-bin  https://github.com/Nerqs/monitor-noticias/releases/latest/download/PKGBUILD  PKGBUILD
