@@ -3,5 +3,6 @@
 # /PKGBUILD baixa esse arquivo direto; o caminho então é só PKGBUILD.
 omajim-git   https://github.com/higorhgon/omajim.git   arch/PKGBUILD
 omapass-git  https://github.com/higorhgon/omapass.git  packaging/PKGBUILD
+omajim-qt    https://github.com/higorhgon/omajim.git#qt   pkgbuild/PKGBUILD
 herdr-git    https://github.com/higorhgon/herdr.git#omarchy    packaging/arch/PKGBUILD
 monitor-noticias-bin  https://github.com/Nerqs/monitor-noticias/releases/latest/download/PKGBUILD  PKGBUILD

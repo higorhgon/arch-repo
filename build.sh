@@ -27,7 +27,9 @@ build_package() {
 		curl --fail --silent --show-error --location --output "$work_dir/$name/PKGBUILD" "$url" >&2
 		cd "$work_dir/$name"
 	else
-		git clone --quiet --depth 1 ${branch:+--branch "$branch"} "$url" "$work_dir/$name" >&2
+		# Com o histórico (sem os arquivos antigos): o pkgver de quem compila
+		# do próprio clone conta os commits
+		git clone --quiet --filter=blob:none ${branch:+--branch "$branch"} "$url" "$work_dir/$name" >&2
 		cd "$work_dir/$name/$(dirname "$path")"
 	fi
 
