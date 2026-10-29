@@ -5,8 +5,7 @@ Actions e publicado na release [`x86_64`](../../releases/tag/x86_64).
 
 | Pacote | App |
 |---|---|
-| `omajim-git` | [Omajim](https://github.com/higorhgon/omajim), cliente XMPP baseado no Gajim |
-| `omajim-qt` | Omajim reescrito em C++/Qt (branch [`qt`](https://github.com/higorhgon/omajim/tree/qt)), em desenvolvimento |
+| `omajim-git` | [Omajim](https://github.com/higorhgon/omajim), cliente XMPP em C++/Qt para o Omarchy |
 | `omapass-git` | [omapass](https://github.com/higorhgon/omapass), gerenciador de senhas |
 | `herdr-git` | [herdr](https://github.com/higorhgon/herdr), fork com dimming dos panes no estilo do Ghostty e tema do Omarchy; substitui o `herdr` do Omarchy |
 | `monitor-noticias-bin` | [Monitor de notícias](https://github.com/Nerqs/monitor-noticias), notícias de tecnologia e falhas críticas priorizadas para a sua stack (de um colega; o PKGBUILD é o que ele publica em cada release) |
@@ -29,13 +28,9 @@ sudo pacman -Syu omajim-git omapass-git herdr-git monitor-noticias-bin
 
 As atualizações chegam pelo `pacman -Syu` de sempre.
 
-O `omajim-qt` e o `omajim-git` instalam o mesmo comando `omajim`, então só um
-fica instalado por vez. Instalar um oferece remover o outro:
-
-```sh
-sudo pacman -S omajim-qt    # troca para a versão em C++/Qt
-sudo pacman -S omajim-git   # volta para a versão em Python
-```
+O `omajim-git` é o Omajim em C++/Qt. Ele substitui a versão em Python, que
+tinha o mesmo nome, e o antigo `omajim-qt`: quem tem um deles instalado
+recebe o novo no `pacman -Syu`.
 
 Os pacotes ainda não são assinados, por isso o `SigLevel = Optional TrustAll`.
 

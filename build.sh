@@ -12,6 +12,15 @@ work_dir=$(mktemp -d)
 expected=()
 changed=0
 
+# O nome do arquivo de um pacote como fica na release: com epoch ele traz
+# ":" (omajim-git-1:1.0.0...), que o GitHub troca nos anexos; o banco do
+# pacman guarda o nome com que o repo-add o recebeu, então "." serve igual
+published_name() {
+	local name
+	name=$(basename "$1")
+	echo "${name//:/.}"
+}
+
 # Compila um pacote; imprime os arquivos que ele deixa no repositório e
 # devolve 2 quando compilou algo novo
 build_package() {
@@ -40,13 +49,15 @@ build_package() {
 	mapfile -t files < <(makepkg --packagelist | grep -v -- '-debug-')
 
 	for file in "${files[@]}"; do
-		[[ -f $repo_dir/$(basename "$file") ]] || missing=1
-		basename "$file"
+		[[ -f $repo_dir/$(published_name "$file") ]] || missing=1
+		published_name "$file"
 	done
 
 	if ((missing)); then
 		makepkg --syncdeps --noconfirm --force >&2
-		cp "${files[@]}" "$repo_dir/"
+		for file in "${files[@]}"; do
+			cp "$file" "$repo_dir/$(published_name "$file")"
+		done
 		return 2
 	fi
 	echo "$name já está atualizado" >&2
