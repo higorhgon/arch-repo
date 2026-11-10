@@ -8,6 +8,7 @@ Actions e publicado na release [`x86_64`](../../releases/tag/x86_64).
 | `omajim-git` | [Omajim](https://github.com/higorhgon/omajim), cliente XMPP em C++/Qt para o Omarchy |
 | `omapass-git` | [omapass](https://github.com/higorhgon/omapass), gerenciador de senhas |
 | `herdr-git` | [herdr](https://github.com/higorhgon/herdr), fork com dimming dos panes no estilo do Ghostty e tema do Omarchy; substitui o `herdr` do Omarchy |
+| `gmk67-git` | [GMK67](https://github.com/higorhgon/gmk67-rgb), luzes do teclado Zuoya GMK67 em C++/Qt, com efeitos animados ao vivo |
 | `monitor-noticias-bin` | [Monitor de notícias](https://github.com/Nerqs/monitor-noticias), notícias de tecnologia e falhas críticas priorizadas para a sua stack (de um colega; o PKGBUILD é o que ele publica em cada release) |
 
 ## Uso
@@ -23,7 +24,7 @@ Server = https://github.com/higorhgon/arch-repo/releases/download/x86_64
 E instale como qualquer pacote:
 
 ```sh
-sudo pacman -Syu omajim-git omapass-git herdr-git monitor-noticias-bin
+sudo pacman -Syu omajim-git omapass-git herdr-git gmk67-git monitor-noticias-bin
 ```
 
 As atualizações chegam pelo `pacman -Syu` de sempre.
