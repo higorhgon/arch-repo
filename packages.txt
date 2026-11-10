@@ -4,5 +4,5 @@
 omajim-git   https://github.com/higorhgon/omajim.git   pkgbuild/PKGBUILD
 omapass-git  https://github.com/higorhgon/omapass.git  packaging/PKGBUILD
 herdr-git    https://github.com/higorhgon/herdr.git#omarchy    packaging/arch/PKGBUILD
-gmk67-git    https://github.com/higorhgon/gmk67-rgb.git#feature/qt-rewrite    pkgbuild/PKGBUILD
+gmk67-git    https://github.com/higorhgon/gmk67-rgb.git#main    pkgbuild/PKGBUILD
 monitor-noticias-bin  https://github.com/Nerqs/monitor-noticias/releases/latest/download/PKGBUILD  PKGBUILD
