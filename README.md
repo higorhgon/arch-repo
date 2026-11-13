@@ -35,6 +35,39 @@ recebe o novo no `pacman -Syu`.
 
 Os pacotes ainda não são assinados, por isso o `SigLevel = Optional TrustAll`.
 
+### No Omarchy
+
+O `omarchy refresh pacman`, que também roda ao trocar de canal com
+`omarchy channel set`, sobrescreve o `/etc/pacman.conf` inteiro com o modelo
+do Omarchy e apaga o bloco acima. Para o repositório sobreviver, deixe o bloco
+num arquivo próprio e use o hook `pre-refresh-pacman`. Esse hook roda logo
+depois do refresh e antes da atualização dos pacotes, e coloca o `Include` de
+volta:
+
+```sh
+# 1. O bloco do repositório num arquivo que o Omarchy não toca
+sudo tee /etc/pacman.d/custom-repos.conf >/dev/null <<'EOF'
+[higorhgon]
+SigLevel = Optional TrustAll
+Server = https://github.com/higorhgon/arch-repo/releases/download/x86_64
+EOF
+
+# 2. No pacman.conf, só a linha Include (remove o bloco antigo, se houver)
+sudo sed -i '/^\[higorhgon\]/,/^Server = .*arch-repo/d' /etc/pacman.conf
+grep -qxF 'Include = /etc/pacman.d/custom-repos.conf' /etc/pacman.conf ||
+  echo 'Include = /etc/pacman.d/custom-repos.conf' | sudo tee -a /etc/pacman.conf
+
+# 3. Ativa o hook de exemplo que o Omarchy já traz
+mv ~/.config/omarchy/hooks/pre-refresh-pacman.d/add-custom-repo{.sample,}
+
+# 4. Confere
+sudo pacman -Sy && pacman -Sl higorhgon
+```
+
+O hook recoloca o `Include` antes do `[core]`. Com isso, este repositório tem
+prioridade sobre os oficiais quando um pacote tem o mesmo nome. Hoje nenhum
+tem: os nomes daqui só existem aqui.
+
 ## Como funciona
 
 - `packages.txt` lista os pacotes: o repositório de cada app e o caminho do
