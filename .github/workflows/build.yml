@@ -29,14 +29,26 @@ jobs:
         shell: bash
     steps:
       - name: Instalar ferramentas
-        run: pacman -Syu --noconfirm --needed git github-cli
+        run: pacman -Syu --noconfirm --needed git github-cli ccache
 
       - uses: actions/checkout@v4
+
+      - name: Cache de compilação (ccache e fontes)
+        uses: actions/cache@v4
+        with:
+          path: |
+            .cache/ccache
+            .cache/srcdest
+          key: arch-build-cache-${{ github.run_id }}
+          restore-keys: |
+            arch-build-cache-
 
       - name: Preparar usuário de build
         run: |
           useradd -m builder
           echo 'builder ALL=(ALL) NOPASSWD: /usr/bin/pacman' >/etc/sudoers.d/builder
+          sed -i 's/!ccache/ccache/' /etc/makepkg.conf
+          mkdir -p "$GITHUB_WORKSPACE/.cache/ccache" "$GITHUB_WORKSPACE/.cache/srcdest"
           chown -R builder: "$GITHUB_WORKSPACE"
 
       - name: Baixar o repositório publicado
@@ -52,7 +64,14 @@ jobs:
           chown -R builder: repo
 
       - name: Compilar
-        run: sudo -u builder --preserve-env=REPO_NAME ./build.sh repo
+        env:
+          CCACHE_DIR: ${{ github.workspace }}/.cache/ccache
+          CCACHE_MAXSIZE: 500M
+          CCACHE_COMPRESS: "1"
+          SRCDEST: ${{ github.workspace }}/.cache/srcdest
+        run: |
+          sudo -u builder --preserve-env=REPO_NAME,CCACHE_DIR,CCACHE_MAXSIZE,CCACHE_COMPRESS,SRCDEST ./build.sh repo
+          sudo -u builder --preserve-env=CCACHE_DIR ccache -s || true
 
       - name: Publicar
         run: |
